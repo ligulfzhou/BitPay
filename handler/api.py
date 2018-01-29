@@ -89,7 +89,6 @@ class PaymentRequestHandler(BaseHandler):
 
     def get(self, order_id):
         try:
-            # order_id = self.get_argument('order_id')
             order = ctrl.api.get_order_ctl(order_id)
             network = self.get_argument('network', 'main')
 
