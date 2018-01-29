@@ -7,7 +7,6 @@ import logging
 import hashlib
 import traceback
 import datetime
-import when
 
 from decimal import Decimal
 from tornado import web, gen
@@ -35,7 +34,7 @@ class BaseHandler(web.RequestHandler, SentryMixin):
     def has_argument(self, name):
         return name in self.request.arguments
 
-    def send_json(self, data={}, errcode=200, errmsg='', status_code=200):
+    def send_json(self, data={}, errcode=200, errmsg='', status_code=200, headers={}):
         res = {
             'errcode': errcode,
             'errmsg': errmsg if errmsg else ERR[errcode]
@@ -57,9 +56,20 @@ class BaseHandler(web.RequestHandler, SentryMixin):
         else:
             self.set_header('Content-Type', 'application/json')
 
+        if headers:
+            [self.set_header(k, v) for k, v in headers.items()]
+
         self.set_status(status_code)
         self.write(json_str)
         self.finish()
+
+    def write_with_headers(self, chunk, headers={}):
+        if headers:
+            [self.set_header(k, v) for k, v in headers.items()]
+
+        # super(BaseHandler, self).write(chunk)
+        self.write(chunk)
+
 
     def dict_args(self):
         _rq_args = self.request.arguments

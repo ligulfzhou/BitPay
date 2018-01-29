@@ -8,4 +8,11 @@
 #     cd ~/prj/ktv_coupon/
 #     tar zxvf app.tar.gz
 # END
-rsync -azP --exclude=.git ../myktv stage:zhou/source
+rsync -azP --exclude=.git ../bitpay aws:source
+
+ssh aws << EOF
+svc restart bitpay:bitpay-8100
+svc restart bitpay:bitpay-8101
+svc restart bitpay:bitpay-8102
+svc restart bitpay:bitpay-8103
+EOF

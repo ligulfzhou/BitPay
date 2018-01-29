@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import json
 import random
 import pickle
 import datetime
 import logging
+import bitcoin    # pybitcointools
 
 from lib import utils
 from decimal import Decimal
 from tornado import httputil
 from bip32utils import BIP32Key
+from bitcoin.wallet import CBitcoinAddress
 
 ORDER_LASTS = 15 * 60
 
@@ -38,8 +39,11 @@ class ApiCtrl(object):
         index = self.ctrl.rs.incr(key)
         return int(index)
 
-    def _get_xpub_value(self):
-        return 'xpub6F4nfP15Zd4755DYXpkJeHw8WydnhJxa7qo5BGzUWTbT1sULndMnVgRSmRqdfAEaWBFTfUYf6SK6pZjFdG12qcfjxDuQcTsJ7gY2F71yd1U'
+    def _get_xpub_value(self, network='main'):
+        if network == 'main':
+            return 'xpub6F4nfP15Zd4755DYXpkJeHw8WydnhJxa7qo5BGzUWTbT1sULndMnVgRSmRqdfAEaWBFTfUYf6SK6pZjFdG12qcfjxDuQcTsJ7gY2F71yd1U'
+
+        return 'tpubDF6EXmfY6frNALcSJHDYLD14vZ6CdUvuppD7Ck1MDUjt5cWuCbiUjsnfK7c6fwHcX3a5s6Mba2dT7GHETCJWP1VwefQJQV7LspTKaEPNscv'
 
     def _get_address(self):
         index = self._get_childkey_index_ctl()
@@ -51,11 +55,11 @@ class ApiCtrl(object):
         key = self.get_order_key_ctl(order_id)
         v = self.ctrl.rs.get(key)
         if v:
-            return json.loads(v)
+            return pickle.loads(v)
 
         order = self.api.get_order(order_id)
         if order:
-            self.ctrl.rs.set(key, json.dumps(order), ORDER_LASTS)
+            self.ctrl.rs.set(key, pickle.dumps(order), ORDER_LASTS)
         return order
 
     def gen_order(self, data={}):
@@ -71,20 +75,20 @@ class ApiCtrl(object):
         order = self.api.add_order(data)
         if order:
             key = self.get_order_key_ctl(order['order_id'])
-            self.ctrl.rs.set(key, json.dumps(order), ORDER_LASTS)
+            self.ctrl.rs.set(key, pickle.dumps(order), ORDER_LASTS)
         return order
 
     def get_orders_of_last_fifteen_minutes(self):
         key = self.get_latest_orders_key_ctl()
         orders = self.ctrl.rs.lrange(key, 0, -1)
         if orders:
-            orders = [json.loads(i) for i in orders]
+            orders = [pickle.loads(i) for i in orders]
             return orders
 
         dt = datetime.datetime.now() - datetime.timedelta(seconds=15*60)
         orders = self.api.get_latest_orders(dt)
         if orders:
-            orders_json = [json.dumps(order) for order in orders]
+            orders_json = [pickle.dumps(order) for order in orders]
             pipe = self.ctrl.rs.pipeline()
             pipe.delete(key)
             pipe.rpush(key, *orders)
@@ -96,4 +100,10 @@ class ApiCtrl(object):
         key = self.get_order_key_ctl(order_id)
         self.api.update_order(order_id, data)
         self.ctrl.rs.delete(key)
+
+    def get_script_from_address(self, address, network='main'):
+        nversion = 0 if network == 'main' else 111  # https://github.com/petertodd/python-bitcoinlib/blob/2cd65b79a3e722f77c71cd26a6f805e62d3ada09/bitcoin/__init__.py#L31
+        a = CBitcoinAddress.from_bytes(address.encode(), nversion)
+        script = a.to_scriptPubKey()
+        return script
 

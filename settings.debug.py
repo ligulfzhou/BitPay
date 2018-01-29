@@ -11,6 +11,6 @@ BITPAY_DB[DB]['slaves'] = []
 BITPAY_DB[DB]['master'] = {
     'host': '127.0.0.1',
     'user': 'root',
-    'pass': 'zhouligang',
+    'pass': 'MYSQLzhouligang153',
     'port': 3306
 }

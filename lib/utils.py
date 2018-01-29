@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import when
 import time
 import json
 import logging
-import requests
 
 from datetime import datetime
 from decimal import Decimal

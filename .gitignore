@@ -1,0 +1,7 @@
+*.pyc
+.python-version
+*.orig
+*.swp
+*.swo
+.*/
+static/combo/*

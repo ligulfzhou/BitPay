@@ -82,7 +82,7 @@ class Database(object):
             finally:
                 ins.close()
 
-        for db in MYSQL_KTV:
+        for db in BITPAY_DB:
             shut(self.session['m'][db])
             for session in self.session['s'][db]:
                 shut(session)
