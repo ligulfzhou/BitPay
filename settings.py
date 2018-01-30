@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 
 # redis
 REDIS = {
@@ -26,6 +27,11 @@ BITPAY_DB = {
             }
         ]
     }
+}
+
+pems = {
+    'fullchain': open(os.path.join(os.path.abspath('.'), 'pem/fullchain.pem')).read(),
+    'privkey': open(os.path.join(os.path.abspath('.'), 'pem/privkey.pem')).read()
 }
 
 # error msg

@@ -18,8 +18,11 @@ class Application(web.Application):
             (r'/btc/page/deposit', 'handler.api.DepositPageHandler'),
 
             (r'/btc/payment/request/(.+)', 'handler.api.PaymentRequestHandler'),
-            (r'/btc/payment', 'handler.api.PaymentHandler'),
             (r'/btc/payment/ack', 'handler.api.PaymentACKHandler'),
+
+            (r'/btc/payment/demo', 'handler.api.DemoHandler'),
+            (r'/btc/payment/demo/gen/order', 'handler.api.DemoGenOrderHandler'),
+            (r'/btc/payment/demo/invoice/(.+)', 'handler.api.DemoInvoiceHandler'),
         ]
 
         settings = {
@@ -27,7 +30,8 @@ class Application(web.Application):
             'xsrf_cookies': False,
             'debug': options.debug,
             'static_path': os.path.join(sys.path[0], 'static'),
-            'sentry_url': 'https://87991f331efb46adbc9a5a94ed9f0e43:d486c2d91c9a4dcebbc036e4958c3919@sentry.ktvsky.com/8' if not options.debug else ''
+            'sentry_url': 'https://87991f331efb46adbc9a5a94ed9f0e43:d486c2d91c9a4dcebbc036e4958c3919@sentry.ktvsky.com/8' if not options.debug else '',
+            'template_path': os.path.join(sys.path[0], 'tpl'),
         }
         web.Application.__init__(self, handlers, **settings)
 

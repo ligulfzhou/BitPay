@@ -7,7 +7,7 @@ from tornado.options import define, options
 
 define('port', default=8000, help='run on this port', type=int)
 define('debug', default=True, help='enable debug mode')
-define('xiaomi', default=False, help='switch to xiaomi node')
+define('network', default='mainnet', help='bitcoin run on which mode')
 
 options.parse_command_line()
 
