@@ -8,9 +8,12 @@
 #     cd ~/prj/ktv_coupon/
 #     tar zxvf app.tar.gz
 # END
-rsync -azP --exclude=.git ../bitpay aws:source
 
-ssh aws << EOF
+rsync -azP --exclude=.git ../bitpay aws_jp_01:source
+
+ssh aws_jp_01 << EOF
+cd /home/ubuntu/source/bitpay
+git pull origin master
 svc restart bitpay:bitpay-8100
 svc restart bitpay:bitpay-8101
 svc restart bitpay:bitpay-8102
