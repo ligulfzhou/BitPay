@@ -15,6 +15,7 @@ class Application(web.Application):
     def __init__(self):
         handlers = [
             (r'/btc/prepay', 'handler.api.PrepayHandler'),
+            (r'/btc/pay/query', 'handler.api.PayQueryHandler'),
             (r'/btc/page/deposit', 'handler.api.DepositPageHandler'),
 
             (r'/btc/payment/request/(.+)', 'handler.api.PaymentRequestHandler'),

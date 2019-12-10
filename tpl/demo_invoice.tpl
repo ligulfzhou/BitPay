@@ -7,7 +7,7 @@
     <body>
 
         <div>复制支付字符： bitcoin:?r=https://bitpay.ligulfzhou.com/btc/payment/request/{{order['order_id']}} </div>
-        或者扫支付码
+        或者直接用钱包扫支付码
         <div id="qrcode"></div>
 <br /><br /><br />
         <div>
@@ -17,6 +17,10 @@
 3: 将钱包在测试网运行，如electrum   :   open -n /Applications/Electrum.app —args —testnet<br />
 4: 将bitcoin:?r=https://bitpay.ligulfzhou.com/btc/payment/request/{{order['order_id']}}复制到收款地址栏<br />
 5: 支付后，会收到通知<br />
+        </div>
+
+        <div>
+商户来查单: /btc/pay/query?order_id={{order['order_id']}}
         </div>
 
         <script type='text/javascript' src='https://code.jquery.com/jquery-3.3.1.min.js'></script>

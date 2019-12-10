@@ -1,2 +1,3 @@
 # BitPay
-implement bitcoin payment
+
+

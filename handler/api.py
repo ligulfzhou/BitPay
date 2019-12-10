@@ -22,6 +22,22 @@ from tornado.options import options
 from settings import pems
 
 
+class PayQueryHandler(BaseHandler):
+
+    def get(self):
+        try:
+            order_id = self.get_argument('order_id')
+        except Exception as e:
+            logging.error(e)
+            raise util.APIError(errcode=10001)
+
+        # query order status
+        order = ctrl.api.get_order(order_id)
+        self.send_json({
+            'order': order
+        })
+
+
 class PrepayHandler(BaseHandler):
 
     def get_satoshi(self, price):
@@ -34,7 +50,7 @@ class PrepayHandler(BaseHandler):
             order_id = self.get_argument('order_id')
         except Exception as e:
             logging.error(e)
-            raise utils.APIError
+            raise utils.APIError(errcode=10001)
 
         order = ctrl.api.gen_order_ctl({
             'info': info,
